@@ -1,4 +1,4 @@
-core <- c("dplyr", "tidyr", "tibble")
+core <- c("dplyr", "tibble")
 
 core_loaded <- function() {
   search <- paste0("package:", core)
