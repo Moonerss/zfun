@@ -23,7 +23,10 @@ Imports:
     vsn,
     mclust,
     R.utils,
-    readxl
+    readxl,
+    rlang,
+    VennDiagram,
+    grid
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
