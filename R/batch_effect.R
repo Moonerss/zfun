@@ -15,7 +15,6 @@
 #' @param prior.plots (Optional) TRUE give prior plots with black as a kernel estimate of the empirical batch effect density and red as the parametric
 #' @param ... Other arguments of \code{\link[sva]{ComBat}}
 #' @importFrom stats model.matrix
-#' @importFrom sva ComBat
 #'
 #' @seealso
 #' \url{https://www.biostars.org/p/196430/}
@@ -53,7 +52,7 @@ batch_combat <- function(expressionMatrix, batch, covariate = NULL, par.prior = 
     mod <- model.matrix(~., data = covariate)
   }
 
-  combat_edata <- ComBat(dat=expressionMatrix, batch=batch, mod=mod, par.prior=par.prior, prior.plots = prior.plots, ...)
+  combat_edata <- sva::ComBat(dat=expressionMatrix, batch=batch, mod=mod, par.prior=par.prior, prior.plots = prior.plots, ...)
 
   # 将矫正后的表达值为负数的设置为0
   if (any(combat_edata<0)) {

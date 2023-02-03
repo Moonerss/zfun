@@ -14,7 +14,7 @@ mean_sd <- function(matrix) {
 
 # quantile
 quantile_normalize <- function(matrix) {
-  data.norm <- normalize.quantiles(matrix)
+  data.norm <- preprocessCore::normalize.quantiles(matrix)
   return(data.norm)
 }
 
@@ -26,7 +26,7 @@ upper_quantile_normalize <- function(matrix) {
 
 # VSN
 vsn_normalize <- function(matrix) {
-  data.norm <- justvsn(matrix)
+  data.norm <- vsn::justvsn(matrix)
   return(data.norm)
 }
 
@@ -61,9 +61,9 @@ two_comp <- function (sample, type = c('default', 'bimodal'), mode.lower.bound=-
   dens.x <- dens$x [x.range];  dens.y <- dens$y [x.range]
   mode <- dens.x[which.max(dens.y)]
   if (type=='bimodal') mean.constr <- c (NA, mode) else mean.constr <- c (mode, mode)
-  model <- normalmixEM (data, k=2, mean.constr=mean.constr, maxit=10000)
-  model.rep <- normalmixEM (data, k=2, mean.constr=mean.constr, maxit=10000)
-  model.alt <- Mclust (data, G=2, modelNames=c ("V","E"))
+  model <- mixtools::normalmixEM (data, k=2, mean.constr=mean.constr, maxit=10000)
+  model.rep <- mixtools::normalmixEM (data, k=2, mean.constr=mean.constr, maxit=10000)
+  model.alt <- mclust::Mclust (data, G=2, modelNames=c ("V","E"))
   # V results is separate SDs for each cluster; E fits a single SD for both clusters
   if (length (model.alt$parameters$variance$sigmasq)==1)  # latter code expects two SD values
     model.alt$parameters$variance$sigmasq <- rep (model.alt$parameters$variance$sigmasq, 2)
@@ -88,8 +88,8 @@ two_comp <- function (sample, type = c('default', 'bimodal'), mode.lower.bound=-
           abs (sum (c (model$mu, model$sigma) - c (model.rep$mu, model.rep$sigma))) > 1e-3 ) {
     # if major mode (and SD of mode) is not within 5% of data range, or if the other mean (for bimodals only)
     # is not within 25% of the Mclust result, try again
-    model <- normalmixEM (data, k=2, mean.constr=mean.constr, maxit=10000)
-    model.rep <- normalmixEM (data, k=2, mean.constr=mean.constr, maxit=10000)
+    model <- mixtools::normalmixEM (data, k=2, mean.constr=mean.constr, maxit=10000)
+    model.rep <- mixtools::normalmixEM (data, k=2, mean.constr=mean.constr, maxit=10000)
 
     if (n.try > 50) stop (paste ("Can't fit mixture model ... giving up\n"))
     n.try <- n.try + 1
@@ -147,10 +147,6 @@ two_comp_normalize <- function(matrix) {
 #' \item "2-component". Normalize data by two-component mixture model of Michael A. Gillette et.al.
 #' }
 #'
-#' @importFrom preprocessCore normalize.quantiles
-#' @importFrom vsn justvsn
-#' @importFrom mixtools normalmixEM
-#' @importFrom mclust Mclust
 #' @importFrom stats density mad quantile
 #'
 #' @references

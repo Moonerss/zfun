@@ -192,8 +192,6 @@ fill_by_normal_distribution <- function(data, width=0.3, downshift=1.8,
 #' @param NA_ratio a number in between 0 and 1, if the NA ratio of a gene greater than it, remove the gene from expression matrix.
 #' @param ... Other arguments of \code{\link[impute]{impute.knn}}
 #'
-#' @importFrom impute impute.knn
-#'
 #' @return A matrix with imputed values
 #'
 #' @examples
@@ -217,7 +215,7 @@ fill_by_knn <- function(data, remove = FALSE, NA_ratio = 0.5, ...) {
   if (remove) {
     data <- remove_na(mat = data, na_ratio = NA_ratio)
   }
-  res <- impute.knn(data, ...)$data
+  res <- impute::impute.knn(data, ...)$data
   colnames(res) <- colnames(data)
   return(res)
 }

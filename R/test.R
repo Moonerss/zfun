@@ -9,7 +9,6 @@
 #'
 #' @export
 #'
-
 auto_t_test <- function(v1, v2, ...) {
   v1 <- as.numeric(v1)
   v2 <- as.numeric(v2)
@@ -101,7 +100,7 @@ auto_wilcox_test <- function(v1, v2, ...) {
     message('Do log2 transforming ...')
     v1 <- log2(v1)
     v2 <- log2(v2)
-    P_1 <- tryCatch(P_1 <- wilcox.test(v1 , v2, ...)$p.value, error = function(e) {P_1 <- NA})
+    P_1 <- tryCatch(P_1 = wilcox.test(v1 , v2, ...)$p.value, error = function(e) {P_1 <- NA})
   }
   temp <- c(R_1, P_1)
 
@@ -115,5 +114,30 @@ auto_wilcox_test <- function(v1, v2, ...) {
     temp[1] <- round(temp[1], digits = 3)
     names(temp) <- c('Ratio', 'P_value')
     return(temp)
+  }
+}
+
+# check whether done log2 transformation
+# logical value, FALSE not log2, TRUE, log2ed
+#' @name check_log2
+#' @title Check whether log2 transformed
+#' @description \code{check_log2} can check data whether have a log2 transformation
+#' @param mat a numeric matrix or a numeric vector for log2 transformation
+#'
+#' @examples
+#' check_log2(1:10)
+#' check_log2(matrix(log2(1:10)))
+#'
+#' @export
+#'
+check_log2 <- function(mat) {
+  qx <- as.numeric(quantile(mat, c(0., 0.25, 0.5, 0.75, 0.99, 1.0), na.rm=T))
+  loged <- (qx[5] > 100) || (qx[6]-qx[1] > 50 && qx[2] > 0) || (qx[2] > 0 && qx[2] < 1 && qx[4] > 1 && qx[4] < 2)
+  if (loged) {
+    cli::cli_alert_info('The data don\'t log2 transformed!')
+    return(FALSE)
+  } else {
+    cli::cli_alert_info('The data have log2 transformed!')
+    return(TRUE)
   }
 }
